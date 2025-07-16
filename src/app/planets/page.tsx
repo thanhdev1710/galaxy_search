@@ -5,7 +5,7 @@ import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-van
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 
-export default function page() {
+export default function Page() {
   const router = useRouter();
   const placeholders = [
     "Which planet is known as the Red Planet?",
@@ -51,6 +51,7 @@ export default function page() {
           Ask anything about the planet
         </h2>
         <PlaceholdersAndVanishInput
+          defaultValue=""
           placeholders={placeholders}
           onChange={handleChange}
           onSubmit={onSubmit}

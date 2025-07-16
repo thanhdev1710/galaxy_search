@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
@@ -17,24 +18,26 @@ export function PlaceholdersAndVanishInput({
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
-
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const startAnimation = () => {
+
+  const startAnimation = useCallback(() => {
     intervalRef.current = setInterval(() => {
       setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
     }, 3000);
-  };
-  const handleVisibilityChange = () => {
-    if (document.visibilityState !== "visible" && intervalRef.current) {
-      clearInterval(intervalRef.current); // Clear the interval when the tab is not visible
-      intervalRef.current = null;
-    } else if (document.visibilityState === "visible") {
-      startAnimation(); // Restart the interval when the tab becomes visible
-    }
-  };
+  }, [placeholders.length]);
 
   useEffect(() => {
     startAnimation();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== "visible" && intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      } else if (document.visibilityState === "visible") {
+        startAnimation();
+      }
+    };
+
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
@@ -43,7 +46,7 @@ export function PlaceholdersAndVanishInput({
       }
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [placeholders]);
+  }, [startAnimation]);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const newDataRef = useRef<any[]>([]);
@@ -73,9 +76,9 @@ export function PlaceholdersAndVanishInput({
     const newData: any[] = [];
 
     for (let t = 0; t < 800; t++) {
-      let i = 4 * t * 800;
+      const i = 4 * t * 800;
       for (let n = 0; n < 800; n++) {
-        let e = i + 4 * n;
+        const e = i + 4 * n;
         if (
           pixelData[e] !== 0 &&
           pixelData[e + 1] !== 0 &&
@@ -179,8 +182,11 @@ export function PlaceholdersAndVanishInput({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     vanishAndSubmit();
-    onSubmit && onSubmit(e);
+    if (onSubmit) {
+      onSubmit(e);
+    }
   };
+
   return (
     <form
       className={cn(
@@ -200,7 +206,9 @@ export function PlaceholdersAndVanishInput({
         onChange={(e) => {
           if (!animating) {
             setValue(e.target.value);
-            onChange && onChange(e);
+            if (onChange) {
+              onChange(e);
+            }
           }
         }}
         onKeyDown={handleKeyDown}
@@ -234,17 +242,9 @@ export function PlaceholdersAndVanishInput({
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <motion.path
             d="M5 12l14 0"
-            initial={{
-              strokeDasharray: "50%",
-              strokeDashoffset: "50%",
-            }}
-            animate={{
-              strokeDashoffset: value ? 0 : "50%",
-            }}
-            transition={{
-              duration: 0.3,
-              ease: "linear",
-            }}
+            initial={{ strokeDasharray: "50%", strokeDashoffset: "50%" }}
+            animate={{ strokeDashoffset: value ? 0 : "50%" }}
+            transition={{ duration: 0.3, ease: "linear" }}
           />
           <path d="M13 18l6 -6" />
           <path d="M13 6l6 6" />
@@ -255,23 +255,11 @@ export function PlaceholdersAndVanishInput({
         <AnimatePresence mode="wait">
           {!value && (
             <motion.p
-              initial={{
-                y: 5,
-                opacity: 0,
-              }}
+              initial={{ y: 5, opacity: 0 }}
               key={`current-placeholder-${currentPlaceholder}`}
-              animate={{
-                y: 0,
-                opacity: 1,
-              }}
-              exit={{
-                y: -15,
-                opacity: 0,
-              }}
-              transition={{
-                duration: 0.3,
-                ease: "linear",
-              }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -15, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "linear" }}
               className="dark:text-zinc-500 text-sm sm:text-base font-normal text-neutral-500 pl-4 sm:pl-12 text-left w-[calc(100%-2rem)] truncate"
             >
               {placeholders[currentPlaceholder]}

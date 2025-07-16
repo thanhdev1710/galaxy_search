@@ -36,7 +36,7 @@ export default function CreativeCards({
     if (data?.data?.total?.value != null) {
       setRoot(data);
     }
-  }, [data?.data?.total?.value]);
+  }, [data, setRoot]);
 
   if (error) {
     return (

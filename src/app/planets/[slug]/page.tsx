@@ -7,7 +7,7 @@ import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-van
 import { useRouter, useSearchParams } from "next/navigation";
 import { use } from "react";
 
-export default function page({
+export default function Page({
   params,
 }: {
   params: Promise<{ slug: string }>;
