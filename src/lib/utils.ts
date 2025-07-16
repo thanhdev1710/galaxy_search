@@ -13,7 +13,9 @@ export const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export const useApod = (slug: string, searchParam: ReadonlyURLSearchParams) => {
   const { data, error, isLoading } = useSWR<Root<Apod>>(
-    `http://localhost:5678/api/v1/search?search_query=${slug}&${searchParam.toString()}`,
+    `${process.env.API}${
+      process.env.API_VERSION
+    }search?search_query=${slug}&${searchParam.toString()}`,
     fetcher
   );
 
