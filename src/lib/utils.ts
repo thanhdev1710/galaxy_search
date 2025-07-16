@@ -9,7 +9,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const fetcher = (url: string) => fetch(url).then((r) => r.json());
+export const fetcher = (url: string) =>
+  fetch(url, {
+    method: "GET",
+    headers: { "ngrok-skip-browser-warning": "69420" },
+  }).then((r) => r.json());
 
 export const useApod = (slug: string, searchParam: ReadonlyURLSearchParams) => {
   const { data, error, isLoading } = useSWR<Root<Apod>>(
