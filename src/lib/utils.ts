@@ -5,6 +5,8 @@ import { ReadonlyURLSearchParams } from "next/navigation";
 import useSWR from "swr";
 import { twMerge } from "tailwind-merge";
 
+console.log(process.env);
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -17,8 +19,8 @@ export const fetcher = (url: string) =>
 
 export const useApod = (slug: string, searchParam: ReadonlyURLSearchParams) => {
   const { data, error, isLoading } = useSWR<Root<Apod>>(
-    `${process.env.API}${
-      process.env.API_VERSION
+    `${process.env.NEXT_PUBLIC_API}${
+      process.env.NEXT_PUBLIC_API_VERSION
     }search?search_query=${slug}&${searchParam.toString()}`,
     fetcher
   );
