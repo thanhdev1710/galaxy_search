@@ -12,7 +12,7 @@ export function cn(...inputs: ClassValue[]) {
 export const fetcher = (url: string) =>
   fetch(url, {
     method: "GET",
-    headers: { "ngrok-skip-browser-warning": "69420" },
+    headers: { "ngrok-skip-browser-warning": "true" },
   }).then((r) => r.json());
 
 export const useApod = (slug: string, searchParam: ReadonlyURLSearchParams) => {
