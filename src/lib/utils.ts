@@ -5,8 +5,6 @@ import { ReadonlyURLSearchParams } from "next/navigation";
 import useSWR from "swr";
 import { twMerge } from "tailwind-merge";
 
-console.log(process.env);
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
